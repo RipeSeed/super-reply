@@ -10,9 +10,23 @@ completion = openai.Completion()
 
 
 def generate_message_for_gpt(messages: list, suggestion_count: int):
-    message = ""
-    for item in messages:
-        message += f"{item['from']}: {item['message']}\n"
+    message = f"Read this email thread"
+
+    message += f"{messages[0]['from']} says\n {messages[0]['message']}\n"
+
+    last_from = messages[0]['from']
+    second_last_from = ""
+
+    for i in range(1, len(messages)):
+        item = messages[i]
+        message += f"{item['from']} replies to {last_from}\n{item['message']}\n"
+
+        if last_from != item['from']:
+            second_last_from = last_from
+            last_from = item['from']
+
+    message += f"and offer {second_last_from} short option to reply\n"
+
     return message
 
 
@@ -20,9 +34,9 @@ def get_reply_suggestions(messages: list, suggestion_count=3):
     message = generate_message_for_gpt(messages, suggestion_count)
 
     reply = completion.create(
-        prompt=message, engine="davinci", stop=['\nHuman'], temperature=0.9,
-        top_p=1, frequency_penalty=0, presence_penalty=0.6, best_of=suggestion_count,
-        max_tokens=150, n=suggestion_count)
+        prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
+        top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=suggestion_count,
+        max_tokens=100, n=suggestion_count)
 
     suggestions = list()
     for choice in reply.choices:

@@ -14,8 +14,8 @@ def sanitize_output(output: str):
     return " ".join(output.split())
 
 
-def generate_message_for_gpt(messages: list):
-    message = f"Read this email thread"
+def generate_message_for_gpt(messages: list, word_count):
+    message = f"Read this email thread\n"
 
     message += f"{messages[0]['from']} says\n {messages[0]['message']}\n"
 
@@ -30,18 +30,19 @@ def generate_message_for_gpt(messages: list):
             second_last_from = last_from
             last_from = item['from']
 
-    message += f"and offer {second_last_from} short option to reply\n"
+    message += f"and offer {second_last_from} {'a short' if word_count==None else ''}" + \
+        f"option to reply {f'of about {word_count} words' if word_count!=None else ''}\n"
 
     return message
 
 
-def get_reply_suggestions(messages: list, suggestion_count=3):
-    message = generate_message_for_gpt(messages)
+def get_reply_suggestions(messages: list, suggestion_count=3, word_count=None):
+    message = generate_message_for_gpt(messages, word_count)
 
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=suggestion_count,
-        max_tokens=100, n=suggestion_count)
+        max_tokens=word_count if word_count != None else 50, n=suggestion_count)
 
     suggestions = list()
     for choice in response.choices:

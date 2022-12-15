@@ -9,7 +9,9 @@ def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']
     suggestion_count = body['suggestion_count']
-    suggestions = ChatReply.get_reply_suggestions(messages, suggestion_count)
+    word_count = body.get('word_count')
+    suggestions = ChatReply.get_reply_suggestions(
+        messages, suggestion_count, word_count)
     return suggestions
 
 

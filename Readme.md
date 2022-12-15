@@ -1,12 +1,27 @@
-OpenAI Models that have Results for this Problem
+# OpenAI Models that have Results for this Problem
 
-# Impressive Result
+## API Request Format
+
+```
+    {
+        "messages": [
+            {
+                "message": "String",
+                "from": "String",
+                "time": "String"
+            }
+        ],
+        "suggestion_count": number
+    }
+```
+
+## Impressive Result
 
 - davinci-instruct-beta
 - davinci
 - text-babbage-001
 
-# Average Results
+## Average Results
 
 - text-similarity-curie-001
 - ada-search-query

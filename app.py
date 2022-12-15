@@ -6,8 +6,10 @@ app = Flask(__name__)
 
 @app.route("/get_reply_suggestions", methods=["GET"])
 def get_reply_suggestions():
-    messages = request.get_json()
-    suggestions = ChatReply.get_reply_suggestions(messages)
+    body = request.get_json()
+    messages = body['messages']
+    suggestion_count = body['suggestion_count']
+    suggestions = ChatReply.get_reply_suggestions(messages, suggestion_count)
     return suggestions
 
 

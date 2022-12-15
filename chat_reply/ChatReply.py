@@ -42,7 +42,7 @@ def get_reply_suggestions(messages: list, suggestion_count=3, word_count=None):
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=suggestion_count,
-        max_tokens=word_count if word_count != None else 50, n=suggestion_count)
+        max_tokens=2*word_count if word_count != None else 50, n=suggestion_count)
 
     suggestions = list()
     for choice in response.choices:

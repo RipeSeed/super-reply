@@ -1,6 +1,4 @@
-# OpenAI Models that have Results for this Problem
-
-## API Request Format
+# API Request Format
 
 ```
     {
@@ -14,6 +12,8 @@
         "suggestion_count": number
     }
 ```
+
+# OpenAI Models that have Results for this Problem
 
 ## Impressive Result
 

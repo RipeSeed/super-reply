@@ -9,12 +9,14 @@
                 "time": "String"
             }
         ],
-        "suggestion_count": number
-        "word_count": number
+        "suggestion_count": number,
+        "word_count": number,
+        "reply_tone": "String"
     }
 ```
 
-`word_count` is optional if you skip that it will generate a short reply
+1. `word_count` is optional if we skip that, it will generate a short reply
+2. `reply_tone` is optional if we skip that, it will generate a reply in same tone
 
 # OpenAI Models that have Results for this Problem
 

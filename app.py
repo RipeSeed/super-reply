@@ -4,7 +4,7 @@ from chat_reply import ChatReply
 app = Flask(__name__)
 
 
-@app.route("/get_reply_suggestions", methods=["GET"])
+@app.route("/get_reply_suggestions", methods=["POST"])
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']

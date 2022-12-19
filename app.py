@@ -1,10 +1,12 @@
 from flask import Flask, request
 from chat_reply import ChatReply
+from middlewares.auth import firebase_auth_middleware
 
 app = Flask(__name__)
 
 
 @app.route("/get_reply_suggestions", methods=["POST"])
+@firebase_auth_middleware
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']

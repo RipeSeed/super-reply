@@ -11,9 +11,10 @@ def get_reply_suggestions():
     suggestion_count = body['suggestion_count']
     word_count = body.get('word_count')
     reply_tone = body.get('reply_tone')
+    other_than = body.get('other_than')
 
     suggestions = ChatReply.get_reply_suggestions(
-        messages, suggestion_count, reply_tone, word_count)
+        messages, suggestion_count, other_than, reply_tone, word_count)
     return suggestions
 
 

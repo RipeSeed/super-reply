@@ -1,8 +1,13 @@
 from flask import Flask, request
 from chat_reply import ChatReply
 from middlewares.auth import firebase_auth_middleware
+from flask_cors import CORS
+import os
 
 app = Flask(__name__)
+
+CORS_WHITE_LIST = os.environ.get('CORS_WHITE_LIST')
+CORS(app, origins=CORS_WHITE_LIST)
 
 
 @app.route("/get_reply_suggestions", methods=["POST"])

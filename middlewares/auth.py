@@ -19,4 +19,6 @@ def firebase_auth_middleware(func):
             return 'Unauthorized', 401
         # Call the original view function
         return func(*args, **kwargs)
+    # Renaming the function name:
+    wrapper.__name__ = func.__name__
     return wrapper

@@ -27,6 +27,21 @@ def get_reply_suggestions():
     return suggestions
 
 
+@app.route("/change_tone", methods=["POST"])
+@firebase_auth_middleware
+def change_tone():
+    body = request.get_json()
+    messages = body['messages']
+    reply_tone = body.get('reply_tone', 'same')
+    reply_from = body.get('reply_from')
+    word_count = body.get('word_count')
+
+    suggestions = ChatReply.change_tone(
+        messages, reply_tone, reply_from, word_count)
+
+    return suggestions
+
+
 @app.route("/", methods=['GET'])
 def index():
     return "Send a get request to the get_reply_suggestions endpoint"

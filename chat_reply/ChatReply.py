@@ -1,6 +1,7 @@
 import openai
 import os
-from .generate_message import sanitize_output, for_change_tone, for_reply_suggestions
+from .generate_message import for_change_tone, for_reply_suggestions
+from .utils import sanitize_output
 
 OPEN_AI_API_KEY = os.environ.get('OPEN_AI_API_KEY')
 
@@ -31,7 +32,6 @@ def change_tone(messages: list, reply_tone: str, reply_from: str, word_count):
     message = for_change_tone(messages, reply_tone,
                               reply_from, word_count)
 
-    # return message
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=len(messages),

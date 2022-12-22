@@ -1,6 +1,6 @@
 import firebase_admin
 from firebase_admin import auth, credentials
-from flask import request
+from flask import request, make_response
 
 cred = credentials.Certificate(f"middlewares/serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
@@ -16,7 +16,7 @@ def firebase_auth_middleware(func):
             auth.get_user(decoded_token['uid'])
         except Exception as e:
             # Respond with an error if the ID token is invalid or has expired
-            return 'Unauthorized', 401
+            return make_response('Unauthorized', 401)
         # Call the original view function
         return func(*args, **kwargs)
     # Renaming the function name:

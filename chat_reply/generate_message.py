@@ -1,9 +1,4 @@
 
-def sanitize_output(output: str):
-    # remove extra spaces
-    return " ".join(output.split())
-
-
 def for_reply_suggestions(messages: list, other_than=None, reply_tone=None, reply_from=None, reply_to=None, word_count=None):
     message = f"Read this email thread\n"
 

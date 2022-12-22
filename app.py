@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, make_response
 from chat_reply import ChatReply
 from middlewares.auth import firebase_auth_middleware
+from middlewares.price_plan import price_plan_middleware
 from flask_cors import CORS
 from flask_expects_json import expects_json, ValidationError
 import os
@@ -24,6 +25,7 @@ def bad_request(error):
 @app.route("/get_reply_suggestions", methods=["POST"])
 @expects_json(get_reply_suggestions.schema)
 @firebase_auth_middleware
+@price_plan_middleware
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']

@@ -29,7 +29,7 @@ def get_reply_suggestions(messages: list, suggestion_count=3,
 
 def change_tone(messages: list, reply_tone: str, reply_from: str, word_count):
     message = for_change_tone(messages, reply_tone,
-                              reply_tone, word_count)
+                              reply_from, word_count)
 
     # return message
     response = completion.create(

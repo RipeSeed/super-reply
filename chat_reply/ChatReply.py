@@ -16,7 +16,6 @@ def get_reply_suggestions(messages: list, suggestion_count=3,
     message = for_reply_suggestions(
         messages, other_than, reply_tone, reply_from, reply_to, word_count)
 
-    return message
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=suggestion_count,

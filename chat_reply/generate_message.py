@@ -1,5 +1,9 @@
+from .utils import sanitize_email
+
 
 def for_reply_suggestions(messages: list, other_than=None, reply_tone=None, reply_from=None, reply_to=None, word_count=None):
+    messages = [
+        {**message, "message": sanitize_email(message['message'])} for message in messages]
     message = f"Read this email thread\n"
 
     message += f"{messages[0]['from']} says\n {messages[0]['message']}\n"

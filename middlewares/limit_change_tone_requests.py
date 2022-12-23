@@ -1,28 +1,31 @@
 from flask import request, make_response
-from firebase_admin import firestore, auth
-from google.cloud.firestore_v1 import Increment
 from .time_utils import get_dd_mm_yy, get_mm_yy
+from firebase_admin import firestore,  auth
 
 db = firestore.client()
 
+FREE_USER_LIMIT_DAILY = 1
 
-def change_tone_request_count_middleware(func):
+
+def limit_change_tone_requests_middleware(func):
     def wrapper(*args, **kwargs):
         token = request.headers.get('Authorization')
         user = auth.verify_id_token(token)
 
         user_id = user['user_id']
         date = get_dd_mm_yy()
-        month = get_mm_yy()
 
         try:
-            user_doc_ref = db.collection(
-                'change_tone_requests_count').document(user_id)
+            doc = db.collection(
+                "change_tone_requests_count").document(user_id).get()
 
-            user_doc_ref.set({
-                date: Increment(1),
-                month: Increment(1)
-            }, merge=True)
+            doc = doc.to_dict()
+
+            if (doc and doc.get(date) >= FREE_USER_LIMIT_DAILY):
+                return make_response({
+                    'error': f"Free user can get {FREE_USER_LIMIT_DAILY} change of tone daily"
+                }, 403)
+
         except Exception:
             return make_response("Internal Server Error ", 500)
 

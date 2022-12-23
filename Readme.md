@@ -1,55 +1,80 @@
 # Authentication Token
 
-For authentication we send a token in header. This token is an firebase id token.
-
-Key for the token in header is `AUTHORIZATION`
+For authentication, you can send a token in the header of the API request. The token is a firebase ID token and the key for the token in the header is AUTHORIZATION.
 
 # API Request Format
 
-1. `get_reply_suggestions`
+There are two types of API requests:
 
-   ```
-       {
-           "messages": [
-               {
-                   "message": "String",
-                   "from": "String",
-                   "time": "String"
-               }
-           ],
-           "suggestion_count": number,
-           "word_count": number,
-           "reply_tone": "String",
-           "other_than": [
-               {
-                   "message": "String"
-               }
-           ]
-       }
-   ```
+`get_reply_suggestions` and `change_tone`.
 
-   1. `word_count` is optional if we skip that, it will generate a short reply
-   2. `reply_tone` is optional if we skip that, it will generate a reply in same tone
-   3. `other_than` is optional
+## `get_reply_suggestions`
 
-2. `change_tone`
-   ```
+This API request generates reply suggestions based on a list of messages (message thread).
+
+The request body should have the following format:
+
+```
+    {
+        "messages": [
+            {
+                "message": "String",
+                "from": "String",
+                "time": "String"
+            }
+        ],
+        "suggestion_count": number,
+        "word_count": number,
+        "reply_tone": "String",
+        "reply_from": "String",
+        "reply_to": "String",
+        "other_than": [
+            {
+                "message": "String"
+            }
+        ]
+    }
+```
+
+- `messages`: An array of objects representing the messages in the email thread. Each object has the following fields:
+
+  - `message`: The body of the message (required).
+  - `from`: The name of the sender who sent the message in the thread (required).
+
+- `suggestion_count`: (optional) The number of replies that the engine should generate.
+- `word_count`: (optional) The desired length of the generated replies. If this field is omitted, the engine will generate short replies. The minimum allowed value is 1.
+- `reply_tone`: (optional) The tone of the generated replies. If this field is omitted, the engine will generate replies in the same tone as the input messages.
+- `reply_from`: The sender for the messages that the engine is generating as suggestions. This should be the person using the app (required).
+- `reply_to`: The recipient of the message, any person from the email thread (required).
+- `other_than`: (optional) An array of objects representing messages that should not be included in the generated replies. Each object has a single field, message, representing the body of the message to exclude.
+
+## `change_tone`
+
+This API request generates replies with a different tone based on a list of messages.
+
+The request body should have the following format:
+
+```
    {
-       "messages": [
-           {
-               "message": "String"
-           },
-           {
-               "message": "String"
-           },
-           {
-               "message": "String"
-           }
-       ],
-       "reply_tone": "String",
-       "reply_from": "String",
-       "word_count": number
-   }
-   ```
-   1. `word_count` is optional if we skip that, it will generate a short reply. We can use this parameter to generate longer replies.
-   2. `reply_tone` is optional, we can skip it to generate more replies
+        "messages": [
+            {
+                "message": "String"
+            },
+            {
+                "message": "String"
+            },
+            {
+                "message": "String"
+            }
+        ],
+        "reply_tone": "String",
+        "reply_from": "String",
+        "word_count": number
+    }
+
+```
+
+- `messages`: An array of objects representing the messages in the email thread. Each object has a single field, `message`, representing the body of the message (required).
+- `reply_tone`: (optional) The desired tone of the generated replies. If this field is omitted, the engine will generate replies with the "same" tone.
+- `reply_from`: The sender for the messages that the engine is generating as suggestions. This should be the person using the app.
+- `word_count`: (optional) The desired length of the generated replies. If this field is omitted, the engine will generate short replies. The minimum allowed value is 1.

@@ -17,6 +17,7 @@ schema = {
                 "required": ["message", "from"]
             }
         },
+        "suggestion_count": {"type": "number"},
         "reply_tone": {"type": "string"},
         "reply_from": {"type": "string"},
         "reply_to": {"type": "string"},

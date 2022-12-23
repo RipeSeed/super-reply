@@ -1,6 +1,6 @@
 from flask import request, make_response
-from .time_utils import get_dd_mm_yy, get_mm_yy
-from firebase_admin import firestore,  auth
+from .time_utils import get_dd_mm_yy
+from firebase_admin import firestore
 
 db = firestore.client()
 
@@ -9,10 +9,8 @@ FREE_USER_LIMIT_DAILY = 1
 
 def limit_change_tone_requests_middleware(func):
     def wrapper(*args, **kwargs):
-        token = request.headers.get('Authorization')
-        user = auth.verify_id_token(token)
+        user_id = request.json['user_id']
 
-        user_id = user['user_id']
         date = get_dd_mm_yy()
 
         try:

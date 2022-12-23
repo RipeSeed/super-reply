@@ -10,6 +10,7 @@ from middlewares.input_limit import input_limit_middleware
 from middlewares.auth import firebase_auth_middleware
 from middlewares.limit_change_tone_requests import limit_change_tone_requests_middleware
 from middlewares.limit_suggestion_requests import limit_suggestion_requests_middleware
+from middlewares.user_payment import user_payment_middleware
 
 from chat_reply import ChatReply
 from flask import Flask, request, jsonify, make_response
@@ -32,6 +33,7 @@ def bad_request(error):
 @app.route("/get_reply_suggestions", methods=["POST"])
 @expects_json(get_reply_suggestions.schema)
 @firebase_auth_middleware
+@user_payment_middleware
 @input_limit_middleware
 @limit_suggestion_requests_middleware
 @suggestion_request_count_middleware
@@ -53,6 +55,7 @@ def get_reply_suggestions():
 @app.route("/change_tone", methods=["POST"])
 @expects_json(change_tone.schema)
 @firebase_auth_middleware
+@user_payment_middleware
 @limit_change_tone_requests_middleware
 @change_tone_request_count_middleware
 def change_tone():

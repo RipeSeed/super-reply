@@ -9,6 +9,10 @@ def firebase_auth_middleware(func):
         # Verify the ID token and get the corresponding user
         try:
             decoded_token = auth.verify_id_token(id_token)
+
+            user = auth.verify_id_token(id_token)
+            user_id = user['user_id']
+            request.json['user_id'] = user_id
             auth.get_user(decoded_token['uid'])
         except Exception as e:
             # Respond with an error if the ID token is invalid or has expired

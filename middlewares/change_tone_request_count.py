@@ -1,5 +1,5 @@
 from flask import request, make_response
-from firebase_admin import firestore, auth
+from firebase_admin import firestore
 from google.cloud.firestore_v1 import Increment
 from .time_utils import get_dd_mm_yy, get_mm_yy
 
@@ -8,10 +8,8 @@ db = firestore.client()
 
 def change_tone_request_count_middleware(func):
     def wrapper(*args, **kwargs):
-        token = request.headers.get('Authorization')
-        user = auth.verify_id_token(token)
+        user_id = request.json['user_id']
 
-        user_id = user['user_id']
         date = get_dd_mm_yy()
         month = get_mm_yy()
 

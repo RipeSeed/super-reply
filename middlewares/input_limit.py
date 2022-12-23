@@ -1,7 +1,7 @@
 from flask import request, make_response
 
 
-def price_plan_middleware(func):
+def input_limit_middleware(func):
     def wrapper(*args, **kwargs):
         body = request.get_json()
         messages = body['messages']

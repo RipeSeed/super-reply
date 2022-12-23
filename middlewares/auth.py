@@ -1,9 +1,5 @@
-import firebase_admin
-from firebase_admin import auth, credentials
+from firebase_admin import auth
 from flask import request, make_response
-
-cred = credentials.Certificate(f"middlewares/serviceAccountKey.json")
-firebase_admin.initialize_app(cred)
 
 
 def firebase_auth_middleware(func):

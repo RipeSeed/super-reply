@@ -1,11 +1,16 @@
-from flask import Flask, request, jsonify, make_response
-from chat_reply import ChatReply
-from middlewares.auth import firebase_auth_middleware
-from middlewares.input_limit import input_limit_middleware
-from flask_cors import CORS
-from flask_expects_json import expects_json, ValidationError
-import os
+from firebase_init import *
 from schema import change_tone, get_reply_suggestions
+import os
+from flask_expects_json import expects_json, ValidationError
+from flask_cors import CORS
+
+from middlewares.suggestion_request_count import suggestion_request_count_middleware
+from middlewares.change_tone_request_count import change_tone_request_count_middleware
+from middlewares.input_limit import input_limit_middleware
+from middlewares.auth import firebase_auth_middleware
+
+from chat_reply import ChatReply
+from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
@@ -26,6 +31,7 @@ def bad_request(error):
 @expects_json(get_reply_suggestions.schema)
 @firebase_auth_middleware
 @input_limit_middleware
+@suggestion_request_count_middleware
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']
@@ -44,6 +50,7 @@ def get_reply_suggestions():
 @app.route("/change_tone", methods=["POST"])
 @expects_json(change_tone.schema)
 @firebase_auth_middleware
+@change_tone_request_count_middleware
 def change_tone():
     body = request.get_json()
     messages = body['messages']

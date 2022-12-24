@@ -21,18 +21,18 @@ def limit_suggestion_requests_middleware(func):
 
             doc = doc.to_dict()
 
-            if doc:
-                if doc.get(date) >= FREE_USER_LIMIT_DAILY:
+            if doc != None:
+                if doc.get(date) != None and (doc.get(date) >= FREE_USER_LIMIT_DAILY):
                     return make_response({
                         "error": f"Free user can get {FREE_USER_LIMIT_DAILY} reply suggestions daily"
                     }, 403)
-                elif doc.get(month) >= FREE_USER_LIMIT_MONTHLY:
+                elif doc.get(month) != None and (doc.get(month) >= FREE_USER_LIMIT_MONTHLY):
                     return make_response({
                         "error": f"Free user can get {FREE_USER_LIMIT_MONTHLY} reply suggestions monthly"
                     }, 403)
 
         except Exception:
-            return make_response("Internal Server Error ", 500)
+            return make_response("Internal Server Error", 500)
 
         return func(*args, **kwargs)
 

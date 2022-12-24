@@ -19,13 +19,13 @@ def limit_change_tone_requests_middleware(func):
 
             doc = doc.to_dict()
 
-            if (doc and doc.get(date) >= FREE_USER_LIMIT_DAILY):
+            if doc != None and doc.get(date) != None and doc.get(date) >= FREE_USER_LIMIT_DAILY:
                 return make_response({
                     'error': f"Free user can get {FREE_USER_LIMIT_DAILY} change of tone daily"
                 }, 403)
 
         except Exception:
-            return make_response("Internal Server Error ", 500)
+            return make_response("Internal Server Error", 500)
 
         return func(*args, **kwargs)
 

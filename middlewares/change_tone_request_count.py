@@ -22,7 +22,7 @@ def change_tone_request_count_middleware(func):
                 month: Increment(1)
             }, merge=True)
         except Exception:
-            return make_response("Internal Server Error ", 500)
+            return make_response("Internal Server Error", 500)
 
         return func(*args, **kwargs)
 

@@ -1,7 +1,13 @@
 from flask import request, make_response
+import os
+
+BYPASS_PAYMENTS = os.environ.get('BYPASS_PAYMENTS', False)
 
 
 def input_limit_middleware(func):
+    if BYPASS_PAYMENTS:
+        return func
+
     def wrapper(*args, **kwargs):
         body = request.get_json()
         messages = body['messages']

@@ -10,6 +10,7 @@ FREE_USER_LIMIT_DAILY = 1
 def limit_change_tone_requests_middleware(func):
     def wrapper(*args, **kwargs):
         user_id = request.json['user_id']
+        user_type = request.json['user_type']
 
         date = get_dd_mm_yy()
 
@@ -19,7 +20,7 @@ def limit_change_tone_requests_middleware(func):
 
             doc = doc.to_dict()
 
-            if doc != None and doc.get(date) != None and doc.get(date) >= FREE_USER_LIMIT_DAILY:
+            if doc != None and user_type == 'free' and doc.get(date) != None and doc.get(date) >= FREE_USER_LIMIT_DAILY:
                 return make_response({
                     'error': f"Free user can get {FREE_USER_LIMIT_DAILY} change of tone daily"
                 }, 403)

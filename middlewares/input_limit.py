@@ -16,7 +16,7 @@ def input_limit_middleware(func):
                 'error': 'Unlock access to super long email threads with our unlimited plan.'
             }, 403)
 
-        elif user_type == 'payed' and total_words > 5000:
+        elif user_type == 'unlimited' and total_words > 5000:
             return make_response({
                 'error': 'Unfortunately, superReply is unable to process super long email threads at this time.'
             }, 403)

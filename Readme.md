@@ -78,3 +78,25 @@ The request body should have the following format:
 - `reply_tone`: (optional) The desired tone of the generated replies. If this field is omitted, the engine will generate replies with the "same" tone.
 - `reply_from`: The sender for the messages that the engine is generating as suggestions. This should be the person using the app.
 - `word_count`: (optional) The desired length of the generated replies. If this field is omitted, the engine will generate short replies. The minimum allowed value is 1.
+
+## Error Code (API Response)
+
+- **FREE_USER_INPUT_LIMIT**
+
+  When a free sends a thread of 1000+ words
+
+- **INPUT_LIMIT**
+
+  When a payed sends a thread of 5000+ words
+
+- **FREE_USER_TONE_LIMIT_DAILY**
+
+  When a free user reaches limit of 1 change tone per day
+
+- **FREE_USER_SUGGESTION_LIMIT_DAILY**
+
+  When a free user reaches limit of 5 get suggestions per day
+
+- **FREE_USER_TONE_LIMIT_DAILY**
+
+  When a free user reaches limit of 75 get suggestions per month

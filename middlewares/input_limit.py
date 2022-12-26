@@ -19,12 +19,14 @@ def input_limit_middleware(func):
 
         if user_type == 'free' and total_words > 1000:
             return make_response({
-                'error': 'Unlock access to super long email threads with our unlimited plan.'
+                'error': 'Unlock access to super long email threads with our unlimited plan.',
+                'error_code': 'FREE_USER_INPUT_LIMIT'
             }, 403)
 
         elif user_type == 'unlimited' and total_words > 5000:
             return make_response({
-                'error': 'Unfortunately, superReply is unable to process super long email threads at this time.'
+                'error': 'Unfortunately, superReply is unable to process super long email threads at this time.',
+                'error_code': 'INPUT_LIMIT'
             }, 403)
 
         return func(*args, **kwargs)

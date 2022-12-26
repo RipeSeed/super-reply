@@ -27,7 +27,8 @@ def limit_change_tone_requests_middleware(func):
 
             if doc != None and user_type == 'free' and doc.get(date) != None and doc.get(date) >= FREE_USER_LIMIT_DAILY:
                 return make_response({
-                    'error': f"Free user can get {FREE_USER_LIMIT_DAILY} change of tone daily"
+                    'error': f"Free user can get {FREE_USER_LIMIT_DAILY} change of tone daily",
+                    'error_code': 'FREE_USER_TONE_LIMIT_DAILY'
                 }, 403)
 
         except Exception:

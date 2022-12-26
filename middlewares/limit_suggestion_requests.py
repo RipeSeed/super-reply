@@ -31,11 +31,13 @@ def limit_suggestion_requests_middleware(func):
             if doc != None and user_type == 'free':
                 if doc.get(date) != None and (doc.get(date) >= FREE_USER_LIMIT_DAILY):
                     return make_response({
-                        "error": f"Free user can get {FREE_USER_LIMIT_DAILY} reply suggestions daily"
+                        "error": f"Free user can get {FREE_USER_LIMIT_DAILY} reply suggestions daily",
+                        'error_code': 'FREE_USER_SUGGESTION_LIMIT_DAILY'
                     }, 403)
                 elif doc.get(month) != None and (doc.get(month) >= FREE_USER_LIMIT_MONTHLY):
                     return make_response({
-                        "error": f"Free user can get {FREE_USER_LIMIT_MONTHLY} reply suggestions monthly"
+                        "error": f"Free user can get {FREE_USER_LIMIT_MONTHLY} reply suggestions monthly",
+                        'error_code': 'FREE_USER_SUGGESTION_LIMIT_MONTHLY'
                     }, 403)
 
         except Exception:

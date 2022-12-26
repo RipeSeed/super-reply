@@ -19,7 +19,7 @@ def get_reply_suggestions(messages: list, suggestion_count=3,
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=suggestion_count,
-        max_tokens=2*word_count if word_count != None else len(message), n=suggestion_count)
+        max_tokens=2*word_count if word_count != None else len(message.split(' ')), n=suggestion_count)
 
     suggestions = list()
     for choice in response.choices:
@@ -35,7 +35,7 @@ def change_tone(messages: list, reply_tone: str, reply_from: str, word_count):
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=len(messages),
-        max_tokens=2*word_count if word_count != None else len(message), n=len(messages))
+        max_tokens=2*word_count if word_count != None else len(message.split(' ')), n=len(messages))
 
     suggestions = list()
     for choice in response.choices:

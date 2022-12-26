@@ -8,7 +8,8 @@ def input_limit_middleware(func):
 
         user_type = body['user_type']
 
-        total_words = sum([len(message['message']) for message in messages])
+        total_words = sum([len(message['message'].split(' '))
+                          for message in messages])
 
         if user_type == 'free' and total_words > 1000:
             return make_response({

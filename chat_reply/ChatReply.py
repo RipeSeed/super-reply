@@ -28,14 +28,15 @@ def get_reply_suggestions(messages: list, suggestion_count=3,
     return suggestions
 
 
-def change_tone(messages: list, reply_tone: str, reply_from: str, word_count):
-    message = for_change_tone(messages, reply_tone,
-                              reply_from, word_count)
+def change_tone(messages: list, suggestion_count=3,
+                other_than=None, reply_tone=None, reply_from=None, reply_to=None, word_count=None):
+    message = for_change_tone(messages, other_than,
+                              reply_tone, reply_from, reply_to, word_count)
 
     response = completion.create(
         prompt=message, engine="text-davinci-003", stop=['\nHuman'], temperature=0.9,
         top_p=1, frequency_penalty=0.5, presence_penalty=0, best_of=len(messages),
-        max_tokens=2*word_count if word_count != None else len(message.split(' ')), n=len(messages))
+        max_tokens=2*word_count if word_count != None else len(message.split(' ')), n=suggestion_count)
 
     suggestions = list()
     for choice in response.choices:

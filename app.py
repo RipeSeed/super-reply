@@ -17,6 +17,7 @@ from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
+DEFAULT_SUGESSION_COUNT = 3
 CORS_WHITE_LIST = os.environ.get('CORS_WHITE_LIST')
 CORS(app, origins=CORS_WHITE_LIST)
 
@@ -40,7 +41,7 @@ def bad_request(error):
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']
-    suggestion_count = body['suggestion_count']
+    suggestion_count = body.get('suggestion_count', DEFAULT_SUGESSION_COUNT)
     word_count = body.get('word_count')
     reply_tone = body.get('reply_tone', 'same')
     other_than = body.get('other_than')
@@ -61,12 +62,15 @@ def get_reply_suggestions():
 def change_tone():
     body = request.get_json()
     messages = body['messages']
-    reply_tone = body.get('reply_tone', 'same')
-    reply_from = body.get('reply_from')
+    suggestion_count = body.get('suggestion_count', DEFAULT_SUGESSION_COUNT)
     word_count = body.get('word_count')
+    reply_tone = body.get('reply_tone', 'same')
+    other_than = body.get('other_than')
+    reply_from = body.get('reply_from')
+    reply_to = body.get('reply_to')
 
     suggestions = ChatReply.change_tone(
-        messages, reply_tone, reply_from, word_count)
+        messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
     return suggestions
 

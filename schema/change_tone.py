@@ -9,14 +9,19 @@ schema = {
                 "properties": {
                     "message": {
                         "type": "string",
-                    }
+                    },
+                    "from": {
+                        "type": "string",
+                    },
                 },
-                "required": ["message"]
+                "required": ["message", "from"]
             }
         },
+        "suggestion_count": {"type": "number"},
         "reply_tone": {"type": "string"},
         "reply_from": {"type": "string"},
+        "reply_to": {"type": "string"},
         "word_count": {"type": "number", "minimum": 1}
     },
-    "required": ["messages"]
+    "required": ["messages", "reply_from", "reply_to"]
 }

@@ -2,6 +2,7 @@ import openai
 import os
 from .generate_message import for_change_tone, for_reply_suggestions
 from .utils import sanitize_output
+from .count_request_info import update_request_info
 
 OPEN_AI_API_KEY = os.environ.get('OPEN_AI_API_KEY')
 
@@ -11,7 +12,12 @@ openai.api_key = OPEN_AI_API_KEY
 completion = openai.Completion()
 
 
-def get_reply_suggestions(messages: list, suggestion_count=3,
+def __count_words(messages: list):
+    return sum([len(message['message'].split(' '))
+                for message in messages])
+
+
+def get_reply_suggestions(email, messages: list, suggestion_count=3,
                           other_than=None, reply_tone=None, reply_from=None, reply_to=None, word_count=None):
     message = for_reply_suggestions(
         messages, other_than, reply_tone, reply_from, reply_to, word_count)
@@ -25,10 +31,13 @@ def get_reply_suggestions(messages: list, suggestion_count=3,
     for choice in response.choices:
         suggestions.append({"message": sanitize_output(choice.text)})
 
+    update_request_info(email, suggestion_count, words_sent=__count_words(
+        messages), words_recieved=__count_words(suggestions))
+
     return suggestions
 
 
-def change_tone(messages: list, suggestion_count=3,
+def change_tone(email, messages: list, suggestion_count=3,
                 other_than=None, reply_tone=None, reply_from=None, reply_to=None, word_count=None):
     message = for_change_tone(messages, other_than,
                               reply_tone, reply_from, reply_to, word_count)
@@ -41,5 +50,8 @@ def change_tone(messages: list, suggestion_count=3,
     suggestions = list()
     for choice in response.choices:
         suggestions.append({"message": sanitize_output(choice.text)})
+
+    update_request_info(email, suggestion_count, words_sent=__count_words(
+        messages), words_recieved=__count_words(suggestions), change_of_tone=1)
 
     return suggestions

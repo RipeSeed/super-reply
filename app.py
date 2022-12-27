@@ -41,6 +41,7 @@ def bad_request(error):
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']
+    user_email = body['user_email']
     suggestion_count = body.get('suggestion_count', DEFAULT_SUGESSION_COUNT)
     word_count = body.get('word_count')
     reply_tone = body.get('reply_tone', 'same')
@@ -49,7 +50,7 @@ def get_reply_suggestions():
     reply_to = body.get('reply_to')
 
     suggestions = ChatReply.get_reply_suggestions(
-        messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
+        user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
     return suggestions
 
 
@@ -57,11 +58,13 @@ def get_reply_suggestions():
 @expects_json(change_tone.schema)
 @firebase_auth_middleware
 @user_payment_middleware
+@input_limit_middleware
 @limit_change_tone_requests_middleware
 @change_tone_request_count_middleware
 def change_tone():
     body = request.get_json()
     messages = body['messages']
+    user_email = body['user_email']
     suggestion_count = body.get('suggestion_count', DEFAULT_SUGESSION_COUNT)
     word_count = body.get('word_count')
     reply_tone = body.get('reply_tone', 'same')
@@ -70,7 +73,7 @@ def change_tone():
     reply_to = body.get('reply_to')
 
     suggestions = ChatReply.change_tone(
-        messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
+        user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
     return suggestions
 

@@ -5,7 +5,7 @@ import os
 
 db = firestore.client()
 
-FREE_USER_LIMIT_DAILY = 5
+FREE_USER_LIMIT_DAILY = 3
 FREE_USER_LIMIT_MONTHLY = 75
 
 BYPASS_PAYMENTS = os.environ.get('BYPASS_PAYMENTS', False)

@@ -2,10 +2,11 @@ from flask import request, make_response
 from .time_utils import get_dd_mm_yy
 from firebase_admin import firestore
 import os
+import math
 
 db = firestore.client()
 
-FREE_USER_LIMIT_DAILY = 1
+FREE_USER_LIMIT_DAILY = math.inf
 BYPASS_PAYMENTS = os.environ.get('BYPASS_PAYMENTS', False)
 
 

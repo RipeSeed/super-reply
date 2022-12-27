@@ -51,7 +51,16 @@ def get_reply_suggestions():
 
     suggestions = ChatReply.get_reply_suggestions(
         user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
-    return suggestions
+
+    response = make_response(suggestions)
+
+    if request.json.get('remaining_emails_daily') != None:
+        response.headers['remaining_emails_daily'] = request.json['remaining_emails_daily']
+
+    if request.json.get('remaining_emails_monthly') != None:
+        response.headers['remaining_emails_monthly'] = request.json['remaining_emails_monthly']
+
+    return response
 
 
 @app.route("/change_tone", methods=["POST"])

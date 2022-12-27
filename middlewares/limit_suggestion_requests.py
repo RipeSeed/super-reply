@@ -20,6 +20,9 @@ def limit_suggestion_requests_middleware(func):
         user_id = request.json['user_id']
         user_type = request.json['user_type']
 
+        request.json['remaining_emails_daily'] = FREE_USER_LIMIT_DAILY
+        request.json['remaining_emails_monthly'] = FREE_USER_LIMIT_MONTHLY
+
         date = get_dd_mm_yy()
         month = get_mm_yy()
 
@@ -30,6 +33,12 @@ def limit_suggestion_requests_middleware(func):
             doc = doc.to_dict()
 
             if doc != None and user_type == 'free':
+                # set remaining emails
+                request.json['remaining_emails_daily'] = FREE_USER_LIMIT_DAILY - \
+                    doc.get(date, 0) - 1
+                request.json['remaining_emails_monthly'] = FREE_USER_LIMIT_MONTHLY - \
+                    doc.get(month, 0) - 1
+
                 if doc.get(date) != None and (doc.get(date) >= FREE_USER_LIMIT_DAILY):
                     return make_response({
                         "error": f"Free user can get {FREE_USER_LIMIT_DAILY} reply suggestions daily",

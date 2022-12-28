@@ -48,6 +48,20 @@ The request body should have the following format:
 - `reply_to`: The recipient of the message, any person from the email thread (required).
 - `other_than`: (optional) An array of objects representing messages that should not be included in the generated replies. Each object has a single field, message, representing the body of the message to exclude.
 
+Response Format:
+
+```
+{
+  "limits": {
+        "remaining_suggestions_daily": 4953,
+        "remaining_suggestions_monthly": 9878
+    },
+  "messages": [
+    {"message": "String"}
+  ]
+}
+```
+
 ## `change_tone`
 
 This API request generates replies with a different tone based on a list of messages.
@@ -77,20 +91,15 @@ The request body should have the following format:
 - `reply_from`: The sender for the messages that the engine is generating as suggestions. This should be the person using the app.
 - `word_count`: (optional) The desired length of the generated replies. If this field is omitted, the engine will generate short replies. The minimum allowed value is 1.
 
-## `limits_info`
-
-Input Authorization token in header with key AUTHORIZATION
-
-outputs
+Response Format:
 
 ```
-  {
-      "remaining_suggestions_daily": number | null,
-      "remaining_suggestions_monthly": number | null
-  }
+{
+  "messages": [
+    {"message": "String"}
+  ]
+}
 ```
-
-It returns `null` if there is no limit on a particular request.
 
 ## Error Code (API Response)
 

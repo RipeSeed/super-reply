@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 DEFAULT_SUGESSION_COUNT = 3
 CORS_WHITE_LIST = os.environ.get('CORS_WHITE_LIST')
-CORS(app, origins=CORS_WHITE_LIST)
+CORS(app, origins=CORS_WHITE_LIST, allow_headers=CORS_WHITE_LIST)
 
 
 @app.errorhandler(400)

@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 DEFAULT_SUGESSION_COUNT = 3
 CORS_WHITE_LIST = os.environ.get('CORS_WHITE_LIST')
-CORS(app, origins=CORS_WHITE_LIST, allow_headers='*')
+CORS(app, origins=CORS_WHITE_LIST)
 
 
 @app.errorhandler(400)
@@ -53,6 +53,9 @@ def get_reply_suggestions():
         user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
     response = make_response(suggestions)
+    # set allow headers
+    response.access_control_allow_headers = [
+        'remaining_emails_daily', 'remaining_emails_monthly']
 
     if request.json.get('remaining_emails_daily') != None:
         response.headers['remaining_emails_daily'] = request.json['remaining_emails_daily']

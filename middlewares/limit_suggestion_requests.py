@@ -20,8 +20,8 @@ def limit_suggestion_requests_middleware(func):
         user_id = request.json['user_id']
         user_type = request.json['user_type']
 
-        request.json['remaining_emails_daily'] = FREE_USER_LIMIT_DAILY
-        request.json['remaining_emails_monthly'] = FREE_USER_LIMIT_MONTHLY
+        request.json['remaining_suggestions_daily'] = FREE_USER_LIMIT_DAILY
+        request.json['remaining_suggestions_monthly'] = FREE_USER_LIMIT_MONTHLY
 
         date = get_dd_mm_yy()
         month = get_mm_yy()
@@ -34,9 +34,9 @@ def limit_suggestion_requests_middleware(func):
 
             if doc != None and user_type == 'free':
                 # set remaining emails
-                request.json['remaining_emails_daily'] = FREE_USER_LIMIT_DAILY - \
+                request.json['remaining_suggestions_daily'] = FREE_USER_LIMIT_DAILY - \
                     doc.get(date, 0) - 1
-                request.json['remaining_emails_monthly'] = FREE_USER_LIMIT_MONTHLY - \
+                request.json['remaining_suggestions_monthly'] = FREE_USER_LIMIT_MONTHLY - \
                     doc.get(month, 0) - 1
 
                 if doc.get(date) != None and (doc.get(date) >= FREE_USER_LIMIT_DAILY):

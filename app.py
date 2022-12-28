@@ -52,7 +52,13 @@ def get_reply_suggestions():
     suggestions = ChatReply.get_reply_suggestions(
         user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
-    return suggestions
+    return {
+        "messages": suggestions,
+        "limits": {
+            'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
+            'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
+        }
+    }
 
 
 @app.route("/change_tone", methods=["POST"])
@@ -76,19 +82,9 @@ def change_tone():
     suggestions = ChatReply.change_tone(
         user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
-    return suggestions
-
-
-@app.route("/limits_info", methods=["POST"])
-@firebase_auth_middleware
-@user_payment_middleware
-@limit_suggestion_requests_middleware
-def limits_info():
-    response = {
-        'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
-        'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
+    return {
+        "messages": suggestions
     }
-    return response
 
 
 @app.route("/", methods=['GET'])

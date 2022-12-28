@@ -19,7 +19,8 @@ app = Flask(__name__)
 
 DEFAULT_SUGESSION_COUNT = 3
 CORS_WHITE_LIST = os.environ.get('CORS_WHITE_LIST')
-CORS(app, origins=CORS_WHITE_LIST, allow_headers='*')
+CORS(app, origins=CORS_WHITE_LIST, allow_headers=[
+     'remaining_emails_daily', 'remaining_emails_monthly'])
 
 
 @app.errorhandler(400)

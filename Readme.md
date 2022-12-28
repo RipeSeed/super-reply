@@ -58,18 +58,16 @@ The request body should have the following format:
    {
         "messages": [
             {
-                "message": "String"
-            },
-            {
-                "message": "String"
-            },
-            {
-                "message": "String"
+                "message": "String",
+                "from": "String",
+                "time": "String"
             }
         ],
         "reply_tone": "String",
         "reply_from": "String",
         "word_count": number
+        "suggestion_count": number,
+        "reply_to": "String",
     }
 
 ```

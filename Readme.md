@@ -77,6 +77,21 @@ The request body should have the following format:
 - `reply_from`: The sender for the messages that the engine is generating as suggestions. This should be the person using the app.
 - `word_count`: (optional) The desired length of the generated replies. If this field is omitted, the engine will generate short replies. The minimum allowed value is 1.
 
+## `limits_info`
+
+Input Authorization token in header with key AUTHORIZATION
+
+outputs
+
+```
+  {
+      "remaining_suggestions_daily": number | null,
+      "remaining_suggestions_monthly": number | null
+  }
+```
+
+It returns `null` if there is no limit on a particular request.
+
 ## Error Code (API Response)
 
 - **FREE_USER_INPUT_LIMIT**

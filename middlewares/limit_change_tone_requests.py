@@ -15,16 +15,12 @@ def limit_change_tone_requests_middleware(func):
         return func
 
     def wrapper(*args, **kwargs):
-        user_id = request.json['user_id']
         user_type = request.json['user_type']
 
         date = get_dd_mm_yy()
 
         try:
-            doc = db.collection(
-                "change_tone_requests_count").document(user_id).get()
-
-            doc = doc.to_dict()
+            doc = request.json['change_tone_requests_count_doc']
 
             if doc != None and user_type == 'free' and doc.get(date) != None and doc.get(date) >= FREE_USER_LIMIT_DAILY:
                 return make_response({

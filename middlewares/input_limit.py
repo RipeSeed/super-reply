@@ -1,7 +1,16 @@
 from flask import request, make_response
+from .time_utils import get_dd_mm_yy, get_mm_yy
+from firebase_admin import firestore
+from .limits_const import suggestions_limits
 import os
 
+db = firestore.client()
+
 BYPASS_PAYMENTS = os.environ.get('BYPASS_PAYMENTS', False)
+
+
+FREE_USER_LIMIT_DAILY = suggestions_limits['FREE_USER_LIMIT_DAILY']
+FREE_USER_LIMIT_MONTHLY = suggestions_limits['FREE_USER_LIMIT_MONTHLY']
 
 
 def input_limit_middleware(func):
@@ -10,9 +19,36 @@ def input_limit_middleware(func):
 
     def wrapper(*args, **kwargs):
         body = request.get_json()
+        user_id = body['user_id']
         messages = body['messages']
-
         user_type = body['user_type']
+
+        body['remaining_suggestions_daily'] = FREE_USER_LIMIT_DAILY
+        body['remaining_suggestions_monthly'] = FREE_USER_LIMIT_MONTHLY
+
+        date = get_dd_mm_yy()
+        month = get_mm_yy()
+
+        # query usage from firebase
+        suggestion_requests_count_doc = db.collection(
+            "suggestion_requests_count").document(user_id).get()
+        suggestion_requests_count_doc = suggestion_requests_count_doc.to_dict()
+
+        change_tone_requests_count_doc = db.collection(
+            "change_tone_requests_count").document(user_id).get()
+
+        change_tone_requests_count_doc = change_tone_requests_count_doc.to_dict()
+
+        # set input limits in request body
+        body['suggestion_requests_count_doc'] = suggestion_requests_count_doc
+        body['change_tone_requests_count_doc'] = change_tone_requests_count_doc
+
+        if suggestion_requests_count_doc != None and user_type == 'free':
+            # set remaining emails
+            request.json['remaining_suggestions_daily'] = FREE_USER_LIMIT_DAILY - \
+                suggestion_requests_count_doc.get(date, 0)
+            request.json['remaining_suggestions_monthly'] = FREE_USER_LIMIT_MONTHLY - \
+                suggestion_requests_count_doc.get(month, 0)
 
         total_words = sum([len(message['message'].split(' '))
                           for message in messages])

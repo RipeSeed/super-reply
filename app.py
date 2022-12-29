@@ -52,11 +52,14 @@ def get_reply_suggestions():
     suggestions = ChatReply.get_reply_suggestions(
         user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
+    remaining_suggestions_daily = body.get('remaining_suggestions_daily')
+    remaining_suggestions_monthly = body.get('remaining_suggestions_monthly')
+
     return {
         "messages": suggestions,
         "limits": {
-            'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
-            'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
+            'remaining_suggestions_daily': remaining_suggestions_daily-1 if remaining_suggestions_daily != None else None,
+            'remaining_suggestions_monthly': remaining_suggestions_monthly-1 if remaining_suggestions_monthly != None else None
         }
     }
 
@@ -83,7 +86,9 @@ def change_tone():
         user_email, messages, suggestion_count, other_than, reply_tone, reply_from, reply_to, word_count)
 
     return {
-        "messages": suggestions
+        "messages": suggestions,
+        'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
+        'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
     }
 
 

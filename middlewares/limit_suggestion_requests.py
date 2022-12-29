@@ -6,6 +6,7 @@ import os
 
 db = firestore.client()
 
+
 FREE_USER_LIMIT_DAILY = suggestions_limits['FREE_USER_LIMIT_DAILY']
 FREE_USER_LIMIT_MONTHLY = suggestions_limits['FREE_USER_LIMIT_MONTHLY']
 
@@ -17,28 +18,15 @@ def limit_suggestion_requests_middleware(func):
         return func
 
     def wrapper(*args, **kwargs):
-        user_id = request.json['user_id']
         user_type = request.json['user_type']
-
-        request.json['remaining_suggestions_daily'] = FREE_USER_LIMIT_DAILY
-        request.json['remaining_suggestions_monthly'] = FREE_USER_LIMIT_MONTHLY
 
         date = get_dd_mm_yy()
         month = get_mm_yy()
 
         try:
-            doc = db.collection(
-                "suggestion_requests_count").document(user_id).get()
-
-            doc = doc.to_dict()
+            doc = request.json['suggestion_requests_count_doc']
 
             if doc != None and user_type == 'free':
-                # set remaining emails
-                request.json['remaining_suggestions_daily'] = FREE_USER_LIMIT_DAILY - \
-                    doc.get(date, 0) - 1
-                request.json['remaining_suggestions_monthly'] = FREE_USER_LIMIT_MONTHLY - \
-                    doc.get(month, 0) - 1
-
                 if doc.get(date) != None and (doc.get(date) >= FREE_USER_LIMIT_DAILY):
                     return make_response({
                         "error": f"Free user can get {FREE_USER_LIMIT_DAILY} reply suggestions daily",

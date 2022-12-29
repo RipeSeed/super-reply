@@ -1,8 +1,10 @@
 from firebase_init import *
 from schema import change_tone, get_reply_suggestions
 import os
+import requests
 from flask_expects_json import expects_json, ValidationError
 from flask_cors import CORS
+from datetime import datetime
 
 from middlewares.suggestion_request_count import suggestion_request_count_middleware
 from middlewares.change_tone_request_count import change_tone_request_count_middleware
@@ -13,6 +15,7 @@ from middlewares.limit_suggestion_requests import limit_suggestion_requests_midd
 from middlewares.user_payment import user_payment_middleware
 
 from chat_reply import ChatReply
+from chat_reply.api_key import OPEN_AI_API_KEY
 from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
@@ -90,6 +93,25 @@ def change_tone():
         'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
         'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
     }
+
+
+@app.route("/usage", methods=['POST', 'GET'])
+def usage():
+    date = datetime.now()
+
+    def get_usd(key):
+        return requests.request("GET", f"https://api.openai.com/v1/usage?date={date.strftime('%Y-%m-%d')}",
+                                headers={'Authorization': f'Bearer {key}'}).json()['current_usage_usd']
+
+    response = [
+        {
+            "key": item['key'][:5]+'...'+item['key'][-5:],
+            "usd_used": get_usd(item['key'])
+        }
+        for item in OPEN_AI_API_KEY
+    ]
+
+    return {"keys": response, "keys_count": len(response)}
 
 
 @app.route("/", methods=['GET'])

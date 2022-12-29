@@ -1,13 +1,9 @@
 import openai
-import os
 from .generate_message import for_change_tone, for_reply_suggestions
 from .utils import sanitize_output
+from .api_key import OPEN_AI_API_KEY
 from .count_request_info import update_request_info
 
-OPEN_AI_API_KEY = [
-    {"key": key, "tokens_count": 0} for key in os.environ.get(
-        'OPEN_AI_API_KEY').split('::')
-]
 
 key_index = 0
 

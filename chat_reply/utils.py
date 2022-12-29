@@ -15,7 +15,7 @@ def sanitize_email(string: str):
     # Remove links
     string = re.sub(r'https?://[^\s]+', '', string)
 
-    return " ".join(string.split())
+    return string.strip()
 
 
 def sanitize_output(output: str):

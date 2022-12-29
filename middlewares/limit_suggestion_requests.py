@@ -1,11 +1,7 @@
 from flask import request, make_response
 from .time_utils import get_dd_mm_yy, get_mm_yy
-from firebase_admin import firestore
 from .limits_const import suggestions_limits
 import os
-
-db = firestore.client()
-
 
 FREE_USER_LIMIT_DAILY = suggestions_limits['FREE_USER_LIMIT_DAILY']
 FREE_USER_LIMIT_MONTHLY = suggestions_limits['FREE_USER_LIMIT_MONTHLY']

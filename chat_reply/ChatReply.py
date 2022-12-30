@@ -1,7 +1,7 @@
 import openai
 from .generate_message import for_change_tone, for_reply_suggestions
 from .utils import sanitize_output
-from .api_key import load_keys
+from .api_key import load_keys, DEFAULT_OPEN_AI_API_KEY
 from .count_request_info import update_request_info
 
 
@@ -11,7 +11,11 @@ KEY_INDEX = 0
 def __choose_api_key():
     global completion, KEY_INDEX
     # choose the API key to use
-    openai.api_key = load_keys()[KEY_INDEX]['key']
+    KEYS = load_keys()
+    if len(KEYS) > 0:
+        openai.api_key = KEYS[KEY_INDEX]['key']
+    else:
+        openai.api_key = DEFAULT_OPEN_AI_API_KEY
 
     completion = openai.Completion()
 

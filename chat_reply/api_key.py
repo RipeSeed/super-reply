@@ -12,9 +12,6 @@ KEY_REMOVE_THRESHOLD = os.environ.get("KEY_REMOVE_THRESHOLD", 17.7)
 DEFAULT_OPEN_AI_API_KEY = os.environ.get("OPEN_AI_API_KEY")
 
 
-print(KEY_REMOVE_THRESHOLD)
-
-
 def __get_usd(key):
     date = datetime.now()
     return requests.request("GET", f"https://api.openai.com/v1/usage?date={date.strftime('%Y-%m-%d')}",

@@ -9,3 +9,8 @@ suggestions_limits = {
 change_tone_limits = {
     "FREE_USER_LIMIT_DAILY": math.inf
 }
+
+word_limits = {
+    "FREE_USER_WORD_LIMIT": 10000,
+    "PAYED_USER_WORD_LIMIT": math.inf
+}

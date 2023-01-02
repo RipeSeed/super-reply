@@ -1,7 +1,7 @@
 from flask import request, make_response
 from .time_utils import get_dd_mm_yy, get_mm_yy
 from firebase_admin import firestore
-from .limits_const import suggestions_limits
+from .limits_const import suggestions_limits, word_limits
 import os
 
 db = firestore.client()
@@ -11,6 +11,9 @@ BYPASS_PAYMENTS = os.environ.get('BYPASS_PAYMENTS', False)
 
 FREE_USER_LIMIT_DAILY = suggestions_limits['FREE_USER_LIMIT_DAILY']
 FREE_USER_LIMIT_MONTHLY = suggestions_limits['FREE_USER_LIMIT_MONTHLY']
+
+FREE_USER_WORD_LIMIT = word_limits['FREE_USER_WORD_LIMIT']
+PAYED_USER_WORD_LIMIT = word_limits['PAYED_USER_WORD_LIMIT']
 
 
 def input_limit_middleware(func):
@@ -53,13 +56,13 @@ def input_limit_middleware(func):
         total_words = sum([len(message['message'].split(' '))
                           for message in messages])
 
-        if user_type == 'free' and total_words > 1000:
+        if user_type == 'free' and total_words > FREE_USER_WORD_LIMIT:
             return make_response({
                 'error': 'Unlock access to super long email threads with our unlimited plan.',
                 'error_code': 'FREE_USER_INPUT_LIMIT'
             }, 403)
 
-        elif user_type == 'unlimited' and total_words > 5000:
+        elif user_type == 'unlimited' and total_words > PAYED_USER_WORD_LIMIT:
             return make_response({
                 'error': 'Unfortunately, superReply is unable to process super long email threads at this time.',
                 'error_code': 'INPUT_LIMIT'

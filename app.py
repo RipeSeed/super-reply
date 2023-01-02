@@ -3,6 +3,8 @@ from schema import change_tone, get_reply_suggestions
 import os
 from flask_expects_json import expects_json, ValidationError
 from flask_cors import CORS
+from openai.error import RateLimitError
+import openai
 
 from middlewares.suggestion_request_count import suggestion_request_count_middleware
 from middlewares.change_tone_request_count import change_tone_request_count_middleware
@@ -29,6 +31,12 @@ def bad_request(error):
         return make_response(jsonify({'error': original_error.message}), 400)
     # handle other "Bad Request"-errors
     return error
+
+
+@app.errorhandler(RateLimitError)
+def restart_request_on_rate_limit(_):
+    api_key.remove_key(openai.api_key)
+    return make_response(jsonify({"error_code": "KEY_CHANGED_RETRY"}), 500)
 
 
 @app.route("/get_reply_suggestions", methods=["POST"])

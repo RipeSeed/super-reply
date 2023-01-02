@@ -87,8 +87,10 @@ def change_tone():
 
     return {
         "messages": suggestions,
-        'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
-        'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
+        "limits": {
+            'remaining_suggestions_daily': request.json.get('remaining_suggestions_daily'),
+            'remaining_suggestions_monthly': request.json.get('remaining_suggestions_monthly')
+        }
     }
 
 

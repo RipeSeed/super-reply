@@ -64,7 +64,7 @@ def input_limit_middleware(func):
 
         elif user_type == 'unlimited' and total_words > PAYED_USER_WORD_LIMIT:
             return make_response({
-                'error': 'Unfortunately, superReply is unable to process super long email threads at this time.',
+                'error': 'Unfortunately, superReply doesn\'t support super long email threads at this time.',
                 'error_code': 'INPUT_LIMIT'
             }, 403)
 

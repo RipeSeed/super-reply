@@ -95,6 +95,10 @@ Response Format:
 
 ```
 {
+  "limits": {
+        "remaining_suggestions_daily": 4953,
+        "remaining_suggestions_monthly": 9878
+    },
   "messages": [
     {"message": "String"}
   ]
@@ -119,6 +123,9 @@ Response Format:
 
   When a free user reaches limit of 5 get suggestions per day
 
-- **FREE_USER_TONE_LIMIT_DAILY**
+- **FREE_USER_SUGGESTION_LIMIT_MONTHLY**
 
   When a free user reaches limit of 75 get suggestions per month
+
+- **KEY_CHANGED_RETRY**
+  Resend the request, reason is old openai key has been used up and has been removed

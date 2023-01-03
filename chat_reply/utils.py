@@ -20,4 +20,4 @@ def sanitize_email(string: str):
 
 def sanitize_output(output: str):
     # remove extra spaces
-    return output.strip()
+    return output.strip(''.join(['\'', '\"'])).strip()

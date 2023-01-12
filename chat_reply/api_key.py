@@ -18,10 +18,11 @@ def __timestamp_before_n_mins(n: int):
 
 
 def load_keys():
-    doc_snapshots = [item for item in api_key_ref.get()]
+    # query the first api with timestamp older than 2 mins
+    doc_snapshots = api_key_ref.where(
+        "timestamp", "<=", __timestamp_before_n_mins(2)).limit(1)
 
-    OPEN_AI_API_KEY = [item for item in [item.to_dict() for item in doc_snapshots] if item.get(
-        'timestamp', 0) < __timestamp_before_n_mins(2)]
+    OPEN_AI_API_KEY = [item.to_dict() for item in doc_snapshots.get()]
 
     return OPEN_AI_API_KEY
 

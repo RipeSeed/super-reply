@@ -7,6 +7,7 @@ db = firestore.client()
 api_key_ref = db.collection("api-keys")
 
 DEFAULT_OPEN_AI_API_KEY = os.environ.get("OPEN_AI_API_KEY")
+KEY_INDEX = 0
 
 
 def __current_timestamp():
@@ -17,14 +18,17 @@ def __timestamp_before_n_mins(n: int):
     return __current_timestamp()-(n*60)
 
 
-def load_keys():
+def load_key():
     # query the first api with timestamp older than 2 mins
     doc_snapshots = api_key_ref.where(
         "timestamp", "<=", __timestamp_before_n_mins(2)).limit(1)
 
     OPEN_AI_API_KEY = [item.to_dict() for item in doc_snapshots.get()]
 
-    return OPEN_AI_API_KEY
+    if len(OPEN_AI_API_KEY) > 0:
+        return OPEN_AI_API_KEY[KEY_INDEX]['key']
+
+    return DEFAULT_OPEN_AI_API_KEY
 
 
 def remove_key(key):

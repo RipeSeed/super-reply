@@ -34,18 +34,26 @@ def bad_request(error):
 
 
 @app.errorhandler(RateLimitError)
-def restart_request_on_rate_limit(_):
-    api_key.remove_key(openai.api_key)
+def restart_request_on_rate_limit(error):
+    error_message = error.user_message
+    # remove the api key is it matches to usage error
+    # Orginal message: You exceeded your current quota, please check your plan and billing details
+    if error_message == 'You exceeded your current quota, please check your plan and billing details.':
+        api_key.remove_key(openai.api_key)
+    else:
+        # add timestamp to the current api key
+        api_key.add_timestamp(openai.api_key)
+
     return make_response(jsonify({"error_code": "KEY_CHANGED_RETRY"}), 500)
 
 
-@app.route("/get_reply_suggestions", methods=["POST"])
-@expects_json(get_reply_suggestions.schema)
-@firebase_auth_middleware
-@user_payment_middleware
-@input_limit_middleware
-@limit_suggestion_requests_middleware
-@suggestion_request_count_middleware
+@ app.route("/get_reply_suggestions", methods=["POST"])
+@ expects_json(get_reply_suggestions.schema)
+@ firebase_auth_middleware
+@ user_payment_middleware
+@ input_limit_middleware
+@ limit_suggestion_requests_middleware
+@ suggestion_request_count_middleware
 def get_reply_suggestions():
     body = request.get_json()
     messages = body['messages']
@@ -72,13 +80,13 @@ def get_reply_suggestions():
     }
 
 
-@app.route("/change_tone", methods=["POST"])
-@expects_json(change_tone.schema)
-@firebase_auth_middleware
-@user_payment_middleware
-@input_limit_middleware
-@limit_change_tone_requests_middleware
-@change_tone_request_count_middleware
+@ app.route("/change_tone", methods=["POST"])
+@ expects_json(change_tone.schema)
+@ firebase_auth_middleware
+@ user_payment_middleware
+@ input_limit_middleware
+@ limit_change_tone_requests_middleware
+@ change_tone_request_count_middleware
 def change_tone():
     body = request.get_json()
     messages = body['messages']
@@ -102,7 +110,7 @@ def change_tone():
     }
 
 
-@app.route("/usage", methods=['POST', 'GET'])
+@ app.route("/usage", methods=['POST', 'GET'])
 def usage():
     keys = api_key.get_usage()
     return {
@@ -111,7 +119,7 @@ def usage():
     }
 
 
-@app.route("/", methods=['GET'])
+@ app.route("/", methods=['GET'])
 def index():
     return "Send a get request to the get_reply_suggestions endpoint"
 
